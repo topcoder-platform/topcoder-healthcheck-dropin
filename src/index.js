@@ -9,12 +9,20 @@ const HTTP_FAILED = 503;
 /**
  * executeCustomChecks - executes custom check functions
  *
- * @param  {array} checks array of functions to execute to check service health. functions must return boolean
- * @returns {boolean}        Returns true if checks is falsy otherwise returns false if any check fails
  */
-function executeCustomChecks(checks) {
+
+
+/**
+  * executeCustomChecks - description
+  *
+  * @param  {object} req    request object
+  * @param  {object} res    response object
+  * @param  {array} checks array of functions to execute to check service health. functions must return boolean
+  * @returns {boolean}        Returns true if checks is falsy otherwise returns false if any check fails
+  */
+function executeCustomChecks(req, res, checks) {
   if (checks) {
-    return checks.reduce((accumulator, check) => accumulator && check(), true);
+    return checks.reduce((accumulator, check) => accumulator && check(req, res), true);
   }
   return true;
 }
@@ -29,7 +37,7 @@ function executeCustomChecks(checks) {
  * @returns {boolean}        result of checks
  */
 function healthCheck(req, res, checks) {
-  const result = executeCustomChecks(checks);
+  const result = executeCustomChecks(req, res, checks);
   res.sendStatus(result ? HTTP_HEALTHY : HTTP_FAILED);
   return result;
 }
@@ -74,4 +82,6 @@ function middleware(checks) {
 module.exports = {
   init,
   middleware,
+  HTTP_HEALTHY,
+  HTTP_FAILED,
 };
