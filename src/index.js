@@ -1,7 +1,14 @@
 import express from 'express';
 
 
+/** @constant HTTP_HEALTHY
+    @type {integer}
+*/
 const HTTP_HEALTHY = 200;
+
+/** @constant HTTP_FAILED
+    @type {integer}
+*/
 const HTTP_FAILED = 503;
 
 
@@ -58,11 +65,12 @@ function middleware(checks) {
 }
 
 /**
- * init - description
- *
- * @param  {array} checks optional array of functions to execute to check service health. functions must return boolean
- * @returns {object}        returns the express server that was initialized
- */
+  * init - intialize an express server for running a default `/health` endpoint
+  *
+  * @param  {array} checks optional array of functions to execute to check service health. functions must return boolean
+  * @param  {type} cb     optional callback to execute once the server is started
+  * @returns {object}        returns the express server that was initialized
+  */
 function init(checks, cb) {
   let checksArray = checks;
   let svcStartCB = cb;
