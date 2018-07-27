@@ -1,0 +1,39 @@
+{
+  "name": "topcoder-healthcheck-dropin",
+  "version": "1.0.0",
+  "description": "service health check endpoint drop in",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "mocha src/test --timeout 20000 --compilers js:babel-core/register",
+    "jsdoc": "./node_modules/.bin/jsdoc -R ./README.md -c jsdoc_config.json src/*.js -d docs",
+    "build": "babel src --out-dir dist && npm run jsdoc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/topcoder-platform/topcoder-healthcheck-dropin.git"
+  },
+  "author": "lazybaer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/topcoder-platform/topcoder-healthcheck-dropin/issues"
+  },
+  "homepage": "https://github.com/topcoder-platform/topcoder-healthcheck-dropin#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "chai": "^4.1.2",
+    "jsdoc": "^3.5.5",
+    "mocha": "^5.2.0",
+    "eslint": "^5.2.0",
+    "eslint-config-airbnb": "^17.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.10.0"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "supertest": "^3.1.0"
+  }
+}
