@@ -91,7 +91,7 @@ function init(checks, cb) {
 
   const app = express();
   app.get('/health', middleware(checksArray));
-  const port = process.env.port || 3000;
+  const port = process.env.PORT || 3000;
   return app.listen(port, (err) => {
     console.log(`********** Topcoder Health Check DropIn listening on port ${port}`);
     svcStartCB(err);
