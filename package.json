@@ -17,7 +17,7 @@
   "bugs": {
     "url": "https://github.com/topcoder-platform/topcoder-healthcheck-dropin/issues"
   },
-  "homepage": "https://github.com/topcoder-platform/topcoder-healthcheck-dropin#readme",
+  "homepage": "https://topcoder-platform.github.io/topcoder-healthcheck-dropin/",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
