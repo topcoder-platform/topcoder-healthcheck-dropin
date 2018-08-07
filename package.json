@@ -1,6 +1,6 @@
 {
   "name": "topcoder-healthcheck-dropin",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "service health check endpoint drop in",
   "main": "dist/index.js",
   "scripts": {
