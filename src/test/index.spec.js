@@ -10,11 +10,11 @@ let request = {}; // define REQUEST
 let response = {}; // define RESPONSE
 
 describe('topcoder', () => {
-  const successChecks = [(req, res) => {
+  const successChecks = [async (req, res) => {
     res.checkCount = res.checkCount ? res.checkCount : 0;
     ++res.checkCount;
     console.log(`check 1 ran. Check count is now: ${res.checkCount}`);
-    return true;
+    return new Promise(resolve => resolve(true))
   },
   (req, res) => {
     res.checkCount = res.checkCount ? res.checkCount : 0;
@@ -30,11 +30,11 @@ describe('topcoder', () => {
     console.log(`check 1 ran. Check count is now: ${res.checkCount}`);
     return true;
   },
-  (req, res) => {
+  async (req, res) => {
     res.checkCount = res.checkCount ? res.checkCount : 0;
     ++res.checkCount;
     console.log(`check 2 ran. Check count is now: ${res.checkCount}`);
-    return false;
+    return new Promise(resolve => resolve(false))
   },
   ];
 
@@ -56,20 +56,24 @@ describe('topcoder', () => {
     it(`should run ${successChecks.length} check functions and return ${hc.HTTP_HEALTHY}`, (done) => {
       const mw = hc.middleware(successChecks);
 
-      mw(request, response); // close middleware
-      expect(response.checkCount).to.equal(successChecks.length);
-      expect(response.statusCode).to.equal(hc.HTTP_HEALTHY);
-      done();
-    }); // close it
+      response.status = (statusCode) => {
+        expect(response.checkCount).to.equal(successChecks.length);
+        expect(statusCode).to.equal(hc.HTTP_HEALTHY);
+        done();
+      }
+      mw(request, response);
+    });
 
-    it(`should run ${successChecks.length} check functions and return ${hc.HTTP_FAILED}`, (done) => {
+    it(`should run ${failureChecks.length} check functions and return ${hc.HTTP_FAILED}`, (done) => {
       const mw = hc.middleware(failureChecks);
 
-      mw(request, response); // close middleware
-      expect(response.checkCount).to.equal(failureChecks.length);
-      expect(response.statusCode).to.equal(hc.HTTP_FAILED);
-      done();
-    }); // close it
+      response.status = (statusCode) => {
+        expect(response.checkCount).to.equal(failureChecks.length);
+        expect(statusCode).to.equal(hc.HTTP_FAILED);
+        done();
+      }
+      mw(request, response);
+    });
   });
 
   describe('#healthCheck init server with no check funcs', () => {

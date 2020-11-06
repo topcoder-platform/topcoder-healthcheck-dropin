@@ -26,9 +26,15 @@ const HTTP_FAILED = 503;
   * @param  {array} checks array of functions to execute to check service health. functions must return boolean
   * @returns {boolean}        Returns true if checks is falsy otherwise returns false if any check fails
   */
-function executeCustomChecks(req, res, checks) {
-  if (checks) {
-    return checks.reduce((accumulator, check) => accumulator && check(req, res), true);
+async function executeCustomChecks(req, res, checks) {
+  if (!checks) {
+    return true
+  }
+  for (const check of checks) {
+    const result = await check(req, res)
+    if (!result) {
+      return false
+    }
   }
   return true;
 }
@@ -43,9 +49,11 @@ function executeCustomChecks(req, res, checks) {
  * @returns {boolean}        result of checks
  */
 function healthCheck(req, res, checks) {
-  const result = executeCustomChecks(req, res, checks);
-  res.status((result ? HTTP_HEALTHY : HTTP_FAILED)).json({ checksRun: (checks ? checks.length : 0) });
-  return result;
+  return executeCustomChecks(req, res, checks)
+    .then(result => {
+      res.status((result ? HTTP_HEALTHY : HTTP_FAILED)).json({ checksRun: (checks ? checks.length : 0) });
+      return result;
+    })
 }
 
 /**
@@ -57,7 +65,10 @@ function healthCheck(req, res, checks) {
 function middleware(checks) {
   return function middle(req, res, next) {
     if (req.url === '/health') {
-      healthCheck(req, res, checks);
+      healthCheck(req, res, checks)
+        .catch(err => {
+          next(err)
+        })
     } else {
       next();
     }
